@@ -1,0 +1,1246 @@
+openapi: 3.0.3
+info:
+  title: Ticket Show project
+  description: It is a multi-user app Used for booking movies tickets.
+    
+  contact:
+    email: someemail@ds.study.iitm
+    
+  version: 1.0.0
+tags:
+  - name: Admin
+    description: Operations about Admin
+  - name: User
+    description: Operations about User
+  - name: Show
+    description: Operations about shows
+  - name: Venue
+    description: Operations about Venues
+  - name: Booking
+    description: Operations about ticket bookings
+  
+
+  
+paths:
+  /admin/login:
+    get:
+      security:
+        - basicUserAuth: []
+      tags:
+        - Admin
+      summary: Logs admin into the system
+      description: This logs in the admin.
+      operationId: logAdmin
+                
+      responses:
+        '201':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/adminLoginResponse'
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/login:
+    get:
+      security:
+        - basicUserAuth: []
+      tags:
+        - User
+      summary: Logs user into the system
+      description: This logs in the user.
+      operationId: logUser
+                
+      responses:
+        '201':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/userLoginResponse'
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /admin/registration:
+    post:
+      tags:
+        - Admin
+      summary: Registers admin into the system
+      description: This registers in the admin.
+      operationId: RegisterAdmin
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Validate admin Resgistered in the system
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/adminRegister'
+      responses:
+        '201':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/adminRegisterResponse'
+                  
+  /user/registration:
+    post:
+      tags:
+        - User
+      summary: Registers user into the system
+      description: This registers in the user.
+      operationId: RegisterUser
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Validate user Resgistered in the system
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/userRegister'
+      responses:
+        '201':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/userRegisterResponse'
+                  
+  /user/show_search/{user_id}:
+    get:
+      tags:
+        - Show
+      summary: Searches shows into the system
+      description: Searches shows into the system
+      operationId: searchShow
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: The user ID for the user to search
+          required: true
+          schema:
+            type: integer
+        - name: search_string
+          in: query
+          schema:
+            type: string
+          required: true
+            
+      responses:
+        '200':
+          description: searches show based on search string entered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/searchShowResponse'
+                
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/venue_search/{user_id}:
+    get:
+      tags:
+        - Venue
+      summary: Searches venues into the system
+      description: Searches venues into the system
+      operationId: searchVenue
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: The user ID for the user to search
+          required: true
+          schema:
+            type: integer
+        - name: search_string
+          in: query
+          schema:
+            type: string
+          required: true
+            
+      responses:
+        '200':
+          description: searches venue based on search string entered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/searchVenueResponse'
+                
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/user_profile/{user_id}:
+    get:
+      tags:
+        - User
+      summary: displays users profile
+      description: displays users profile
+      operationId: profileUser
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: user_id
+          in: path
+          description: The user ID for the user to their profile
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: displays users profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userProfileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+  
+  /admin/admin_profile/{admin_id}:
+    get:
+      tags:
+        - Admin
+      summary: displays admins profile
+      description: displays admins profile
+      operationId: profileAdmin
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: admin_id
+          in: path
+          description: The admin ID for the user to their profile
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: displays admins profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminProfileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+  
+  /admin/addVenue:
+    post:
+      tags:
+          - Venue
+      summary: Creates new venue
+      description: Creates new venue
+      operationId: addVenue
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+      requestBody:
+        description: Create a new venue for the admin venue in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/addVenueRequest' 
+                
+      responses:
+        '201':
+          description: Venue created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/addVenueResponse'  
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /admin/addShow:
+    post:
+      tags:
+          - Show
+      summary: Creates new show
+      description: Creates new show
+      operationId: addShow
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+      requestBody:
+        description: Create a new show for the admin show in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/addShowRequest' 
+                
+      responses:
+        '201':
+          description: Show created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/addShowResponse'  
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+  
+  /admin/addShow:
+    post:
+      tags:
+          - Venue
+      summary: Creates new hall
+      description: Creates new hall
+      operationId: addHall
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+      requestBody:
+        description: Create a new hall for the admin hall in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/addHallRequest' 
+                
+      responses:
+        '201':
+          description: Show created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/addHallResponse'  
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/bookShow:
+    post:
+      tags:
+          - Booking
+      summary: Creates new booking
+      description: Creates new booking
+      operationId: bookShow
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+      requestBody:
+        description: Create a new booking for the user show in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/bookShowRequest' 
+                
+      responses:
+        '201':
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/bookShowResponse'  
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/deleteBooking/{booking_id}:
+    delete:
+      tags:
+        - Booking
+      summary: deletes users booking information
+      description: deletes users booking information
+      operationId: deleteBooking
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: booking_id
+          in: path
+          description: The booking ID to delete booking
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: deletes the booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteBookingResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /user/deleteUser/{user_id}:
+    delete:
+      tags:
+        - User
+      summary: deletes user information
+      description: deletes user information
+      operationId: deleteUser
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: user_id
+          in: path
+          description: The user ID to delete user
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: deletes the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteUserResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+        
+  /admin/deleteAdmin/{admin_id}:
+    delete:
+      tags:
+        - Admin
+      summary: deletes admin information
+      description: deletes admin information
+      operationId: deleteAdmin
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: admin_id
+          in: path
+          description: The admin ID to delete admin
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: deletes the admin.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteAdminResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /admin/deleteVenue/{venue_id}:
+    delete:
+      tags:
+        - Venue
+      summary: deletes venue information
+      description: deletes venue information
+      operationId: deleteVenue
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: venue_id
+          in: path
+          description: The venue ID to delete venue
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: deletes the venue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteVenueResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /admin/deleteShow/{show_id}:
+    delete:
+      tags:
+        - Show
+      summary: deletes show information
+      description: deletes show information
+      operationId: deleteShow
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: show_id
+          in: path
+          description: The show ID to delete show
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: deletes the show.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteShowResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+  
+  /admin/editShow/{show_id}:
+    put:
+      tags:
+          - Show
+      summary: Edit existing show
+      description: Edit existing show
+      operationId: editShow
+      
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: show_id
+          in: path
+          description: The show ID for the admin to edit
+          required: true
+          schema:
+            type: integer
+            
+      requestBody:
+        description: Edit the existing show for the Admin Show in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/editShowRequest' 
+                
+      responses:
+        '202':
+          description: Show created
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+          
+  /admin/editVenue/{venue_id}:
+    put:
+      tags:
+          - Venue
+      summary: Edit existing venue
+      description: Edit existing venue
+      operationId: editVenue
+      
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: venue_id
+          in: path
+          description: The Venue ID for the admin to edit
+          required: true
+          schema:
+            type: integer
+            
+      requestBody:
+        description: Edit the existing venue for the Admin Venue in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/editVenueRequest' 
+                
+      responses:
+        '202':
+          description: Venue created
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '499':
+          $ref: '#/components/responses/TokenRequired'
+     
+              
+  
+components:
+  schemas:
+  
+    searchShowChildObject:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        show_name:
+          type: string
+          example: "anything"
+        rating:
+          type: integer
+          example: 1
+        tag:
+          type: string
+          example: "anything"
+        price:
+          type: integer
+          example: 137
+        timing:
+          type: string
+          example: "3-5 pm"
+        capacity:
+          type: integer
+          example: 130
+        
+    searchShowResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchShowChildObject'
+            
+    searchVenueChildObject:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        venue_name:
+          type: string
+          example: "anything"
+        place:
+          type: string
+          example: "iitm"
+        location:
+          type: string
+          example: "chennai"
+        
+    searchVenueResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchVenueChildObject'
+            
+    adminLoginResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        token:
+          type: string
+          example: Sam12!@#$^&**3
+    
+    userLoginResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        token:
+          type: string
+          example: Sam12!@#$^&**3
+
+    userProfileResponse:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        email_id:
+          type: string
+          example: sam@gmail.com
+        mobile_no:
+          type: string
+          example: 1234567890
+        venue_name:
+          type: string
+          example: anything
+        show_name:
+          type: string
+          example: anything
+        sear_no:
+          type: string
+          example: 1,2,3
+            
+    adminProfileResponse:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+
+    adminRegister:
+      type: object
+      properties:
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        email_id:
+          type: string
+          example: sam@xyz.com
+        password:
+          type: string
+          example: Sam123
+       
+    adminRegisterResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: success/error message.
+    
+    userRegister:
+      type: object
+      properties:
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        password:
+          type: string
+          example: Sam123
+        email:
+          type: string
+          example: sam@xyz.com
+        mobileNumber:
+          type: string
+          example: 9898989898
+          
+    userRegisterResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: success/error message.
+          
+    addVenueRequest:
+      type: object
+      properties:
+        admin_id:
+          type: integer
+          example: 1
+        venue_name:
+          type: string
+          example: "oat"
+        place:
+          type: string
+          example: "iitm"
+        location:
+          type: string
+          example: "chennai"
+          
+    addVenueResponse:
+      type: object
+      properties:
+        venue_id:
+          type: integer
+          example: 1
+        created:
+          type: boolean
+          example: true
+        errorMessage:
+          type: string
+          example: null
+          
+    addHallRequest:
+      type: object
+      properties:
+        hall_id:
+          type: integer
+          example: 1
+        capacity:
+          type: integer
+          example: 180
+          
+    addHallResponse:
+      type: object
+      properties:
+        hall_id:
+          type: integer
+          example: 1
+        created:
+          type: boolean
+          example: true
+        errorMessage:
+          type: string
+          example: null
+          
+    addShowRequest:
+      type: object
+      properties:
+        admin_id:
+          type: integer
+          example: 1
+        venue_id:
+          type: integer
+          example: 2
+        show_name:
+          type: string
+          example: "breaking barriers"
+        rating:
+          type: integer
+          example: 4
+        timing:
+          type: string
+          example: "3-4 pm"
+        tag:
+          type: string
+          example: "action"
+        price:
+          type: integer
+          example: 150
+        capacity:
+          type: integer
+          example: 150
+          
+    addShowResponse:
+      type: object
+      properties:
+        show_id:
+          type: integer
+          example: 1
+        created:
+          type: boolean
+          example: true
+        errorMessage:
+          type: string
+          example: null
+          
+    bookShowRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        venue_id:
+          type: integer
+          example: 2
+        show_id:
+          type: integer
+          example: 1
+        seat_no:
+          type: string
+          example: "1,2,3"
+          
+    bookShowResponse:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          example: 1
+        created:
+          type: boolean
+          example: true
+        errorMessage:
+          type: string
+          example: null
+          
+    deleteBookingResponse:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          example: 1
+          
+    deleteUserResponse:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        
+    deleteAdminResponse:
+      type: object
+      properties:
+        admin_id:
+          type: integer
+          example: 1
+          
+    deleteVenueResponse:
+      type: object
+      properties:
+        venue_id:
+          type: integer
+          example: 1
+          
+    deleteShowResponse:
+      type: object
+      properties:
+        show_id:
+          type: integer
+          example: 1
+          
+    editShowRequest:
+      type: object
+      properties:
+        Show_name:
+          type: string
+        rating:
+          type: string
+        timing:
+          type: string
+        tag:
+          type: string
+        price:
+          type: integer
+          
+    editVenueRequest:
+      type: object
+      properties:
+        venue_name:
+          type: string
+        place:
+          type: string
+        location:
+          type: string
+        capacity:
+          type: integer
+    
+  securitySchemes:
+    basicUserAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: basic
+      
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              message:
+                type: string
+                example: "Resource Not Found error"
+              payload:
+                type: object
+            
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: "Access Denied"
+              payload:
+                type: object
+            
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: "Bad Request Data"
+              payload:
+                type: object
+            
+    NotAcceptable:
+      description: Not Acceptable
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 406
+              message:
+                type: string
+                example: "Not acceptable request"
+              payload:
+                type: object
+            
+    InvalidToken:
+      description: Invalid Token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 498
+              message:
+                type: string
+                example: "Invalid or Expired token"
+              payload:
+                type: object
+            
+    TokenRequired:
+      description: Token Required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 499
+              message:
+                type: string
+                example: "Access Token required, missing x-access-token in headers"
+              payload:
+                type: object

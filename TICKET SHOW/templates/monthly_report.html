@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Monthly Report</title>
+	<!-- Bootstrap CDN -->
+</head>
+<body>
+	<div class="container">
+		<center><h1>Monthly Report</h1></center>
+		<p>Hi {{ username }},</p>
+		<p>Here's your monthly report:</p>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Category</th>
+					<th>Count</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- <tr>
+					<td>Booking Details:</td>
+					<td>{{ booking_details }}</td>
+				</tr> -->
+				<tr>
+                    
+					<td>Shows Names</td>
+                    {% for show_name in show_name %}
+					<td>{{ show_name }}</td>
+                    {% endfor %}
+				</tr>
+				<tr>
+					<td>Venue Names</td>
+                    {% for venue_name in venue_name %}
+					<td>{{ venue_name }}</td>
+                    {% endfor %}
+				</tr>
+				
+                <tr>
+					<td>Last Login</td>
+					<td>{{ last_login }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Thank you for using our service.</p>
+		<p>Best regards,</p>
+		<p>Farhan</p>
+	</div>
+</body>
+</html>
