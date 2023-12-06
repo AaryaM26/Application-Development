@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Monthly Report</title>
+	<!-- Bootstrap CDN -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<center><h1>Monthly Report</h1></center>
+		<p>Hi {{ username }},</p>
+		<p>Here's your monthly report:</p>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Category</th>
+					<th>Count</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Number of Posts</td>
+					<td>{{ num_posts }}</td>
+				</tr>
+				<tr>
+					<td>Number of Followers</td>
+					<td>{{ num_followers }}</td>
+				</tr>
+				<tr>
+					<td>Number Following</td>
+					<td>{{ num_following }}</td>
+				</tr>
+				
+				<tr>
+					<td>First login</td>
+					<td>{{ first_login }}</td>
+				</tr>
+                <tr>
+					<td>Last Login</td>
+					<td>{{ last_login }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Thank you for using our service.</p>
+		<p>Best regards,</p>
+		<p>Aarya</p>
+	</div>
+</body>
+</html>

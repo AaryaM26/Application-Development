@@ -1,0 +1,1074 @@
+openapi: 3.0.3
+info:
+  title: BlogLite Project
+  description: It is a multi-user app Used for uploading blogs with images
+    
+  contact:
+    email: 21f1003998@ds.study.iitm.ac.in
+    
+  version: 1.0.0
+tags:
+  - name: User
+    description: Operations about User
+  - name: Profile
+    description: Operations about User Profile
+  - name: Blogs
+    description: Operations about Blog Posts
+  - name: Feed
+    description: Operations about User feed
+  
+
+  
+paths:
+  /user/logReg:
+    post:
+      tags:
+        - User
+      summary: Registers user into the system
+      description: Registers user into the system
+      operationId: userRegister
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Validate the user Resgistered in the system
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/userRegister'
+      responses:
+        '200':
+          description: successfully registered
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/userRegisterResponse'
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/ServerError'
+                
+    get:
+      security:
+        - basicUserAuth: []
+      tags:
+        - User
+      summary: This will Login the user into the system.
+      description: This will Login the user into the system.
+      operationId: userLogin
+                
+      responses:
+        '200':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/loginUserResponse'
+        
+        
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+                  
+  /user/search:
+    get:
+      tags:
+        - Profile
+      summary: This will search users in the system
+      description: This will search users in the system
+      operationId: userSearch
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+
+        - name: search_string
+          in: query
+          schema:
+            type: string
+          required: true
+            
+      responses:
+        '200':
+          description: searches user based on search string entered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userSearchResponse'
+                
+        
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+          
+  /user/blog:
+    get:
+      tags:
+        - Blogs
+      summary: displays user's blogs in user's profile
+      description: displays user's blogs in user's profile
+      operationId: postUser
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: BlogId
+          in: query
+          description: The Blog ID to display the blogs
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: displays blogs of user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blogUserResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+          - Blogs
+      summary: Updates the Blog
+      description: Updates the Blog
+      operationId: editBlog
+      
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: BlogId
+          in: query
+          description: The Blog ID for the user to edit
+          required: true
+          schema:
+            type: integer
+            
+      requestBody:
+        description: Updates the User's Blog in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/editBlogRequest' 
+                
+      responses:
+        '200':
+          description: Blog created
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    created:
+                      type: string
+                    errorMessage:
+                      type: string
+                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+          - Blogs
+      summary: Creates new Blog
+      description: Creates new Blog
+      operationId: addBlog
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+      requestBody:
+        description: Create a new Blog for the User in the system
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/addBlogRequest' 
+                
+      responses:
+        '200':
+          description: Blog created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/addBlogResponse'  
+                  
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        
+  
+  /user/follower:
+    get:
+      tags:
+        - Profile
+      summary: This will fetch followers of the users from the system
+      description: This will fetch followers of the users from the system
+      operationId: userFollowers
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: otherUserID
+          in: query
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: Successfully fetched the followers of the user based on userId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userFollowersResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        
+          
+  /user/following:
+    get:
+      tags:
+        - Profile
+      summary: displays the usernames of everyone user is following
+      description: displays the usernames of everyone user is following
+      operationId: userFollowing
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        
+        - name: otherUserID
+          in: query
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: successfull! following of the user based on userId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userFollowingResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+          
+    put:
+      tags:
+          - Profile
+      summary: updates user's following 
+      description: updates user's following
+      operationId: updateFollowing
+      
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: otherUserId
+          in: query
+          schema:
+            type: integer
+            
+                
+      responses:
+        '200':
+          description: following updated
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    updated:
+                      type: string
+                    errorMessage:
+                      type: string
+                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        
+                
+                      
+  /user/profile:
+    get:
+      tags:
+        - Profile
+      summary: displays user's profile information
+      description: displays user's profile information
+      operationId: userProfileInfo
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: userId
+          in: query
+          description: The user ID to display user's profile information
+          required: true
+          schema:
+            type: integer
+        - name: otherUserId
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: displays user's profile information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userProfileInfoResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  
+  
+    put:
+      tags:
+          - Profile
+      summary: updates user's profile information
+      description: updates user's profile information
+      operationId: updateProfile
+      
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: userId
+          in: query
+          description: The user ID for the user to edit
+          required: true
+          schema:
+            type: integer
+        - name: otherUserId
+          in: query
+          schema:
+            type: integer
+            
+      requestBody:
+        description: updates user's profile information
+        content:
+          multipart/form-data:
+            schema:
+                $ref: '#/components/schemas/updateProfileRequest' 
+                
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    updated:
+                      type: string
+                    errorMessage:
+                      type: string
+                      
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+  
+  /user/feed/:
+    get:
+      tags:
+        - Feed
+      summary: displays blogs of everyone user is following
+      description: displays blogs of everyone user is following
+      operationId: userFeed
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: userId
+          in: query
+          description: The user's user ID is needed to display blogs posted by everyone user is following
+          required: true
+          schema:
+            type: integer
+        
+            
+      responses:
+        '200':
+          description: displays blogs of everyone user is following.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userFeedResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+                  
+  /user/deletePost:
+    delete:
+      security:
+          - basicUserAuth: []
+      tags:
+        - Blogs
+      summary: deletes user's profile
+      description: deletes user's profile 
+      operationId: deletePost
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: blog_id
+          in: query
+          description: The user ID to delete profile
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: deletes the profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deletePostResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+     
+  /user/deleteProfile:
+    delete:
+      security:
+          - basicUserAuth: []
+      tags:
+        - Profile
+      summary: deletes user's profile
+      description: deletes user's profile 
+      operationId: deleteProfile
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: userId
+          in: query
+          description: The user ID to delete profile
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: deletes the profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteProfileResponse'
+                
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+                
+  /user/profileInfo:
+    get:
+      tags:
+        - Profile
+      summary: displays user's profile
+      description: displays user's profile
+      operationId: userProfile
+      parameters: 
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true 
+        - name: userId
+          in: query
+          description: The user ID to display user's profile
+          required: true
+          schema:
+            type: integer
+        - name: otherUserId
+          in: query
+          schema:
+            type: integer    
+      responses:
+        '200':
+          description: displays user's profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userProfileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '498':
+          $ref: '#/components/responses/InvalidToken'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  
+  
+components:
+  schemas:
+  
+    searchUserChildObject:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        isMe:
+          type: string
+          example: "true"
+          
+        username:
+          type: string
+          example: "anything"
+        dpLink:
+          type: string
+          example: "/static/image.png"
+        isFollowing:
+          type: boolean
+          example: true
+        
+    userSearchResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchUserChildObject'  
+        code:
+          type: integer
+          example: 200
+            
+    
+    loginUserResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        token:
+          type: string
+          example: Sam12!@#$^&**3
+        code:
+          type: integer
+          example: 200
+
+          
+    addBlogRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Title"
+        content:
+          type: string
+          example: "Caption"
+        isPublic:
+          type: string
+          example: "true"
+        imageURL:
+          type: string
+          format: Base64
+          
+    addBlogResponse:
+      type: object
+      properties:
+        created:
+          type: boolean
+          example: true
+        errorMessage:
+          type: string
+          example: null
+      
+    followerUserchildObject:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        followerId:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "anything"
+        follower_name:
+          type: string
+          example: "anything"
+        dpLink:
+          type: string
+          example: "/static/image.png"
+        isFollowing:
+          type: string
+          example: "true"
+          
+    userFollowersResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/followerUserchildObject'  
+    
+    userFollowingResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/followerUserchildObject'  
+            
+    editBlogRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        caption:
+          type: string
+        isPublic:
+          type: boolean
+        imageLink:
+          type: string
+          format: Base64
+            
+    updateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        mobileNum:
+          type: string
+        emailId:
+          type: string
+        profileIMG:
+          type: string
+          format: base64
+          
+
+          
+    userProfileResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        password:
+          type: string
+          example: Sam123
+        emailId:
+          type: string
+          example: sam@xyz.com
+        mobileNumber:
+          type: string
+          example: 9898989898
+        imageLink:
+          type: string
+          example: "/static/image.png"
+        
+            
+          
+    postUserChildObject:
+      type: object
+      properties:
+        blogId:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: my blog
+        caption:
+          type: string
+          example: my blog caption
+        imageLink:
+          type: string
+          example: "/static/image.png"
+        isPublic:
+          type: boolean
+          example: true
+        timeStamp:
+          type: string
+          example: 2022-12-24
+    
+    userProfileInfoResponse:
+      type: object
+      properties:
+        myuserId:
+          type: integer
+          example: 1
+        userId:
+          type: integer
+          example: 1
+        Name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        imageLink:
+          type: string
+          example: "/static/image.png"
+        totalPosts:
+          type: integer
+          example: 12
+        follwerCount:
+          type: integer
+          example: 15
+        followingCount:
+          type: integer
+          example: 109
+        isMyprofile:
+          type: boolean
+          example: true
+        following:
+          type: boolean
+          example: true
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/postUserChildObject'
+          
+    deleteProfileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "successfully deleted"
+          
+    deletePostResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "successfully deleted"
+        
+        
+    userRegister:
+      type: object
+      properties:
+        name:
+          type: string
+          example: sammy
+        username:
+          type: string
+          example: sam
+        password:
+          type: string
+          example: Sam123
+        emailId:
+          type: string
+          example: sam@xyz.com
+        mobileNumber:
+          type: string
+          example: 9898989898
+          
+    userRegisterResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: success/error message.
+          
+    feedUserChildObject:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "anything"
+        message:
+          type: array
+          items:
+            $ref: '#/components/schemas/feedChildObject'
+    
+    feedChildObject:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "anything"
+        title:
+          type: string
+          example: "post title"
+        caption:
+          type: string
+          example: "post content"
+        imageLink:
+          type: string
+          example: "/static/image.png"
+        timeStamp:
+          type: string
+          example: 2022-12-24
+          
+        
+    userFeedResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/feedUserChildObject'
+            
+    blogUserResponse:
+      type: object
+      properties:
+        title:
+          type: string
+          example: my blog
+        caption:
+          type: string
+          example: my blog caption
+        imageLink:
+          type: string
+          example: "/static/image.png"
+        isPublic:
+          type: boolean
+          example: true
+    
+  securitySchemes:
+    basicUserAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: basic
+      
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: "Resource Not Found error"
+              
+            
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              error:
+                type: string
+                example: "Access Denied"
+              
+            
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 400
+              error:
+                type: string
+                example: "Bad Request Data"
+            
+    NotAcceptable:
+      description: Not Acceptable
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 406
+              error:
+                type: string
+                example: "Not acceptable request"
+              
+            
+    InvalidToken:
+      description: Invalid Token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 498
+              error:
+                type: string
+                example: "Invalid or Expired token"
+              
+            
+    TokenRequired:
+      description: Token Required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 499
+              error:
+                type: string
+                example: "Access Token required, missing x-access-token in headers"
+                
+                
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 500
+              error:
+                type: string
+                example: "invalid input or null values"
+              
