@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Kanban Board</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="static/StyleSheet.css" rel="stylesheet">
+</head>
+<body>
+  {% with messages = get_flashed_messages() %}  
+  {% if messages %}  
+        {% for message in messages %}  
+             <center><p >{{ message }}</p> </center>
+        {% endfor %}  
+  {% endif %}  
+{% endwith %}  
+  <!--...............................MAIN...................... -->
+
+
+<div class="container-fluid p-5 bg-success text-white ">
+
+   <p style="text-align:left ;font-size: 25px">
+      <b>Hello, {{ session['username'] }}</b>
+      <span style="float:right ;font-size: 15px">
+          <i class="bi bi-bar-chart-line-fill"></i> <a style="color:white ;"href="{{url_for('summary')}}" >SUMMARY </a> &nbsp; &nbsp
+          <i class="bi bi-power"></i><a style="color:white ;"href="{{url_for('logout')}}">LOGOUT</a>
+      </span>
+   </p>
+
+  <h1 class="text-center">KANBAN BOARD</h1>
+  <p class="text-center">Your Work flow!</p> 
+
+</div>
+
+<center>
+  <p style="font-family:Trebuchet MS;font-size: 3em; color:#03522d">To add List <a href="{{url_for('addList')}}" style="color:#00A86B">Click here</a> </p></center>
+  
+
+
+<div class="container mt-5"> <center>
+  <br><div class="row row-cols-5 ">
+    <!--...............................list and card........................ -->
+   <br>{% for c in range(0,list|length) %}
+   
+  <br><div class="col">
+ <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+   
+     {{list[c].list_name}}
+ </button>
+  <ul class="dropdown-menu">
+   <li><a class="dropdown-item" href="/UpdateList/{{list[c].id}}">Edit</a></li>
+   <li><hr class="dropdown-divider"></li>
+   <li><a class="dropdown-item" href="/ConfirmList/{{list[c].id}}">Delete</a></li>
+ </ul>
+ <br><br>
+ 
+ <div class="shadow-lg p-3 mb-5 bg-white rounded">
+  
+
+ {% for n in range(0,g) %}
+ {% if list[c].id==card[n].list_id %}
+
+
+ <div class="card bg-light mb-3" style="max-width: 18rem;">
+    
+   <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+ {{card[n].title}}
+    </button>
+    <ul class="dropdown-menu">
+   <li><a class="dropdown-item" href="/UpdateCard/{{card[n].id}}">Edit</a></li>
+   <li><hr class="dropdown-divider"></li>
+   <li><a class="dropdown-item" href="/ConfirmCard/{{card[n].id}}">Delete</a></li>
+ </ul>
+    
+   <div class="card-body">
+    <p class="card-text">{{card[n].content}}</p>
+    {%if card[n].status=="1" %}
+                             
+    <p style="color: green;"> Complete  <i class="bi bi-person-check"></i></p>
+     {%else%}
+     <p style="color: red;">Not Complete</p>
+   {% endif %}
+   </div>
+   </div><br>
+   {%endif%}
+   {%endfor%}<br>
+ <a  href="{{url_for('addCard')}}"><button type="button" class="btn btn-success btn-circle btn-lg"><i class="bi bi-plus "></i></button></a><br><br>
+   </div>
+   </div>
+   {%endfor%}
+
+   <br>
+	
+  </div>
+</center>
+</div>
+ <!--...............................logo........................ -->
+<div id="content">
+  <img src=static/logo1.png>
+</div>
+
+</body>
+</html>

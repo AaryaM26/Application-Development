@@ -1,0 +1,34 @@
+<!DOCTYPE html>   
+<html>   
+<head>  
+<title> Login Page </title>  
+<link href="static/StyleSheet.css" rel="stylesheet">
+
+</head>
+
+
+<body style="background-color: #3bb78f;
+background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);"> 
+  {% with messages = get_flashed_messages() %}  
+  {% if messages %}  
+        {% for message in messages %}  
+        <center><p style="background-color:white; background-size: 3cm;">{{ message }}</p></center>   
+        {% endfor %}  
+  {% endif %}  
+{% endwith %} 
+<div id="main" class >
+<form method="POST" action="" id="frm" >
+<center><h1 style="font-family:Trebuchet MS; color:#00A86B"> Login </h1></center>
+<br><br>
+
+{{form.hidden_tag()}}
+{{form.username (class="p1")}}<br><br>
+{{form.password(class="p1")}}<br><br>
+{{form.submit(class="butn")}}
+  <br><br>
+  <a style="color:#00A86B;" href="{{ url_for('register') }}">Don't have an account? Sign Up</a><br>
+
+ </form>
+</div>
+</body>     
+</html> 
